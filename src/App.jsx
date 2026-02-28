@@ -199,22 +199,35 @@ function App() {
 
   const handleSignIn = async () => {
     if (!supabase) return
-    const email = window.prompt('请输入邮箱，我们会发送 Magic Link 登录链接')
+    const email = window.prompt('请输入邮箱，我们会发送登录验证码')
     if (!email) return
+    const normalizedEmail = email.trim()
+    if (!normalizedEmail) return
 
     const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        emailRedirectTo: window.location.origin,
-      },
+      email: normalizedEmail,
     })
 
     if (error) {
-      window.alert(`登录邮件发送失败：${error.message}`)
+      window.alert(`验证码发送失败：${error.message}`)
       return
     }
 
-    window.alert('登录邮件已发送，请查收邮箱并点击链接完成登录。')
+    const token = window.prompt('请输入邮箱中的 8 位验证码')
+    if (!token) return
+
+    const { error: verifyError } = await supabase.auth.verifyOtp({
+      email: normalizedEmail,
+      token: token.trim(),
+      type: 'email',
+    })
+
+    if (verifyError) {
+      window.alert(`验证码校验失败：${verifyError.message}`)
+      return
+    }
+
+    window.alert('登录成功。')
   }
 
   const handleSignOut = async () => {

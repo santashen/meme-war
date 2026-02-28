@@ -12,7 +12,7 @@ function Navbar({ authLoading, isLoggedIn, username, onSignIn, onSignOut, onEdit
             onClick={isLoggedIn ? onSignOut : onSignIn}
             className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-700"
           >
-            {isLoggedIn ? '退出登录' : 'Magic Link 登录'}
+            {isLoggedIn ? '退出登录' : '验证码登录'}
           </button>
           {isLoggedIn && (
             <button
